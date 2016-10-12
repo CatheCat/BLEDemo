@@ -16,7 +16,7 @@ class MasterViewController: UITableViewController, CBCentralManagerDelegate, CBP
     var lastReloadDate:Date?
     var objects = [Any]()
     // For Service/Characteristic scan
-    var deatailInfo = ""
+    var detailInfo = ""
     var restServices = [CBService]()
     var centalManager: CBCentralManager? //?表示可選型別，可能回傳是空
 
@@ -105,7 +105,7 @@ class MasterViewController: UITableViewController, CBCentralManagerDelegate, CBP
         let targetItem = allItems[targetKey]
         
         NSLog("Connection to \(targetKey) ...")
-        centalManager?.connect(targetItem?.peripheral, options: nil)
+        centalManager?.connect(targetItem!.peripheral, options: nil)
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
@@ -129,6 +129,33 @@ class MasterViewController: UITableViewController, CBCentralManagerDelegate, CBP
         NSLog("Disconnected to \(name)")
         
         startToScan()
+    }
+    
+    // MarkL CBPeripheralDElegate Methods
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+        // any error occurred then disconnect to peripheral
+        if error != nil {
+            centalManager?.cancelPeripheralConnection(peripheral)
+            NSLog("Error: \(error)")
+            return
+        }
+        
+        // Prepare for collect detailInfo
+        detailInfo = ""
+        restServices.removeAll()
+        
+        // Prepare to discovery characterastic for each service
+        restServices += peripheral.services!
+        
+        // Pick the first one
+        let targetService = restServices.first
+        restServices.remove(at: 0)
+        
+        peripheral.discoverCharacteristics(nil, for: targetService)
+        
+    }
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+        
     }
     
     func startToScan()
