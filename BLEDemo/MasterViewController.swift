@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import CoreBluetooth
 
-class MasterViewController: UITableViewController {
+class MasterViewController: UITableViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
 
     var detailViewController: DetailViewController? = nil
     var objects = [Any]()
@@ -88,7 +89,22 @@ class MasterViewController: UITableViewController {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
         }
     }
+    
+    func showAlert(msg: String) {
+        // using UIAlertController to show alert msg
+        let alert = UIAlertController(title: "", message: msg, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "ok", style: UIAlertActionStyle.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
 
+    
+    func centralManagerDidUpdateState(_ central: CBCentralManager) {
+        let status = central.state;
+        if status != .poweredOn {
+            //show Error Msg
+            showAlert(msg: "BLE is not avaiable. (\(status.rawValue))");
+        }
+    }
 
 }
 
