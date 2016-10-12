@@ -108,6 +108,29 @@ class MasterViewController: UITableViewController, CBCentralManagerDelegate, CBP
         centalManager?.connect(targetItem?.peripheral, options: nil)
     }
     
+    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        let name = peripheral.name ?? "Unknown"
+        NSLog("Connected to \(name)")
+        
+        stopScanning()
+        
+        // Try to discovery the services of peripheral
+        peripheral.delegate = self
+        peripheral.discoverServices(nil)
+        
+    }
+    
+    func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
+        showAlert(msg: "Fail to connect!")
+    }
+    
+    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        let name = peripheral.name ?? "UnKnown"
+        NSLog("Disconnected to \(name)")
+        
+        startToScan()
+    }
+    
     func startToScan()
     {
         NSLog("start scanning")
