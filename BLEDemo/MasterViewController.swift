@@ -12,9 +12,12 @@ import CoreBluetooth
 class MasterViewController: UITableViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
 
     var detailViewController: DetailViewController? = nil
-    var allItems = [String:DiscoveredItem]();
+    var allItems = [String:DiscoveredItem](); //store all discoverd peripheral
     var lastReloadDate:Date?
     var objects = [Any]()
+    // For Service/Characteristic scan
+    var deatailInfo = ""
+    var restServices = [CBService]()
     var centalManager: CBCentralManager? //?表示可選型別，可能回傳是空
 
     override func viewDidLoad() {
@@ -75,7 +78,7 @@ class MasterViewController: UITableViewController, CBCentralManagerDelegate, CBP
         let targetKey = allKeys[indexPath.row]
         let targetItem = allItems[targetKey]
         let name = targetItem?.peripheral?.name ?? "Unknow"
-        cell.textLabel!.text = "\(name) RSSI: \(targetItem?.lastRSSI)"
+        cell.textLabel!.text = "\(name) RSSI: \(targetItem!.lastRSSI)"
         let lastScanSecondAgo = String(format: "%if", Date().timeIntervalSince(targetItem!.lastScanDateTime))
         cell.detailTextLabel!.text = "Last scan \(lastScanSecondAgo) seconds ago"
         return cell
@@ -93,6 +96,16 @@ class MasterViewController: UITableViewController, CBCentralManagerDelegate, CBP
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
         }
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //detect one of lists is selected, and indexPath represent row index
+        let allKeys = Array(allItems.keys)
+        let targetKey = allKeys[indexPath.row]
+        let targetItem = allItems[targetKey]
+        
+        NSLog("Connection to \(targetKey) ...")
+        centalManager?.connect(targetItem?.peripheral, options: nil)
     }
     
     func startToScan()
