@@ -12,6 +12,8 @@ import CoreBluetooth
 class MasterViewController: UITableViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
 
     var detailViewController: DetailViewController? = nil
+    var allItems = [String:DiscoveredItem]();
+    var lastReloadDate:Date?
     var objects = [Any]()
     var centalManager: CBCentralManager? //?表示可選型別，可能回傳是空
 
@@ -116,6 +118,34 @@ class MasterViewController: UITableViewController, CBCentralManagerDelegate, CBP
             startToScan()
         }
     }
+    
+    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
+        let existItem = allItems[peripheral.identifier.uuidString]
+        if existItem == nil {
+            let name = (peripheral.name ?? "Unknown")
+            NSLog("Discovered: \(name), RSSI: \(RSSI), UDID: \(peripheral.identifier.uuidString), AdvDate: \(advertisementData.description)")
+        }
+        let newItem = DiscoveredItem(newPeripheral: peripheral, RSSI: Int(RSSI))
+        allItems[peripheral.identifier.uuidString] = newItem
+        
+        //Decide when to reload tableview
+        let now = Date()
+        if existItem == nil || lastReloadDate == nil || now.timeIntervalSince(lastReloadDate!) > 2.0 {
+            lastReloadDate = now
+            tableView.reloadData() // Refresh TableView
+        }
+    }
+}
 
+// define data structure for storing bluetooth device information
+struct DiscoveredItem {
+    var peripheral:CBPeripheral?
+    var lastRSSI:Int
+    var lastScanDateTime:Date
+    init(newPeripheral:CBPeripheral, RSSI:Int) {
+        peripheral = newPeripheral
+        lastRSSI = RSSI
+        lastScanDateTime = Date()
+    }
 }
 
