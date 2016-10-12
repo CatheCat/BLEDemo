@@ -87,6 +87,18 @@ class MasterViewController: UITableViewController, CBCentralManagerDelegate, CBP
         }
     }
     
+    func startToScan()
+    {
+        NSLog("start scanning")
+        let options = [CBCentralManagerScanOptionAllowDuplicatesKey:true]
+        centalManager?.scanForPeripherals(withServices: nil, options: options)
+    }
+    
+    func stopToScan()
+    {
+        centalManager?.stopScan()
+    }
+    
     func showAlert(msg: String) {
         // using UIAlertController to show alert msg
         let alert = UIAlertController(title: "", message: msg, preferredStyle: UIAlertControllerStyle.alert)
@@ -100,6 +112,8 @@ class MasterViewController: UITableViewController, CBCentralManagerDelegate, CBP
         if status != .poweredOn {
             //show Error Msg
             showAlert(msg: "BLE is not avaiable. (\(status.rawValue))");
+        } else {
+            startToScan()
         }
     }
 
