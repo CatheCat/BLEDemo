@@ -46,8 +46,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="PXw-aB-Owp">
-                                <frame key="frameInset" minX="20" minY="119" width="335" height="528"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="PXw-aB-Owp">
                                 <color key="backgroundColor" red="0.50196078431372548" green="0.79607843137254897" blue="0.82352941176470584" alpha="1" colorSpace="calibratedRGB"/>
                                 <mutableString key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</mutableString>
                                 <color key="textColor" red="0.12549019607843137" green="0.17254901960784313" blue="0.30196078431372547" alpha="1" colorSpace="calibratedRGB"/>
@@ -92,6 +91,55 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FJe-Yq-33r" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="708" y="128.18590704647679"/>
+        </scene>
+        <!--Sensor Detail View Controller-->
+        <scene sceneID="b6B-Bc-Vba">
+            <objects>
+                <viewController id="dnM-si-2cb" customClass="SensorDetailViewController" customModule="BLEDemo" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="JbC-d8-ixv"/>
+                        <viewControllerLayoutGuide type="bottom" id="MTC-do-bXU"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="dnz-Tu-eYI">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00.0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OO3-Bv-XbF">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="110" id="eam-g5-PUk"/>
+                                    <constraint firstAttribute="width" constant="150" id="lVt-fu-qVY"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="50"/>
+                                <color key="textColor" red="0.50196078431372548" green="0.79607843137254897" blue="0.82352941176470584" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00.0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i3h-Vw-9XV">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="150" id="FC4-mB-CY1"/>
+                                    <constraint firstAttribute="height" constant="110" id="j4I-tK-Fxg"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="50"/>
+                                <color key="textColor" red="0.12549019607843137" green="0.17254901960784313" blue="0.30196078431372547" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="OO3-Bv-XbF" firstAttribute="top" secondItem="JbC-d8-ixv" secondAttribute="bottom" constant="46" id="03P-tW-pKo"/>
+                            <constraint firstItem="i3h-Vw-9XV" firstAttribute="centerX" secondItem="dnz-Tu-eYI" secondAttribute="centerX" id="1lM-wn-yLx"/>
+                            <constraint firstItem="OO3-Bv-XbF" firstAttribute="centerX" secondItem="dnz-Tu-eYI" secondAttribute="centerX" id="aWy-4E-0Ia"/>
+                            <constraint firstItem="i3h-Vw-9XV" firstAttribute="top" secondItem="OO3-Bv-XbF" secondAttribute="bottom" constant="46" id="eUu-E2-4TK"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="himidityLabel" destination="i3h-Vw-9XV" id="qzz-Wi-ZAJ"/>
+                        <outlet property="humidityLabel" destination="i3h-Vw-9XV" id="f9w-gX-PcO"/>
+                        <outlet property="temperatureLabel" destination="OO3-Bv-XbF" id="exz-aM-ZOo"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Stb-MM-saS" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1608.8" y="-630.13493253373315"/>
         </scene>
         <!--Split View Controller-->
         <scene sceneID="Nki-YV-4Qg">
@@ -152,6 +200,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Master" id="Zdf-7t-Un8"/>
+                    <connections>
+                        <segue destination="dnM-si-2cb" kind="show" identifier="showSensorDetail" id="Hbx-cR-dyh"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rux-fX-hf1" sceneMemberID="firstResponder"/>
             </objects>

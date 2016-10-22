@@ -37,6 +37,11 @@ class DetailViewController: UIViewController, CBPeripheralDelegate {
         targetPeripheral?.setNotifyValue(true, for: targetCharacteristic!)
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        targetPeripheral?.setNotifyValue(false, for: targetCharacteristic!)
+    }
+    
     @IBAction func sendBtnPressed(_ sender: AnyObject) {
         guard let text = inputTextField.text else {
             return

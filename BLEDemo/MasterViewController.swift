@@ -10,6 +10,7 @@ import UIKit
 import CoreBluetooth
 
 let target_characteristic_uuid = "ffe1" // KentDingle
+let sensor_characteristic_uuid = "dfd1" // Bluno
 
 class MasterViewController: UITableViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
 
@@ -79,6 +80,10 @@ class MasterViewController: UITableViewController, CBCentralManagerDelegate, CBP
                 controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem
                 controller.navigationItem.leftItemsSupplementBackButton = true
             }
+        } else if segue.identifier == "showSensorDetail" {
+            let controller = segue.destination as! SensorDetailViewController
+            controller.tartgetPeripheral = talkingPeripheral
+            controller.targetCharacteristic  = talkingCharacteristic
         }
     }
     
@@ -208,7 +213,15 @@ class MasterViewController: UITableViewController, CBCentralManagerDelegate, CBP
                 // Link to Segue named showDetail
                 self.performSegue(withIdentifier: "showDetail", sender: nil)
                 return
+            } else if shouldTalking && tmp.uuid.uuidString.lowercased() == sensor_characteristic_uuid {
+                restServices.removeAll();
+                talkingPeripheral = peripheral
+                talkingCharacteristic = tmp
+                // Link to Segue named showDetail
+                self.performSegue(withIdentifier: "showSensorDetail", sender: nil)
+                return
             }
+
         }
         // End of all discovering yet, or not
         if restServices.isEmpty {

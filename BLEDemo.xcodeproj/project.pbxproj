@@ -16,6 +16,7 @@
 		C13627F51DAE51AA001D2468 /* BLEDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13627F41DAE51AA001D2468 /* BLEDemoTests.swift */; };
 		C13628001DAE51AA001D2468 /* BLEDemoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13627FF1DAE51AA001D2468 /* BLEDemoUITests.swift */; };
 		C136280F1DAE547D001D2468 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C136280E1DAE547D001D2468 /* CoreBluetooth.framework */; };
+		C13E508D1DBB4489008B1D58 /* SensorDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13E508C1DBB4489008B1D58 /* SensorDetailViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		C13627FF1DAE51AA001D2468 /* BLEDemoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEDemoUITests.swift; sourceTree = "<group>"; };
 		C13628011DAE51AA001D2468 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C136280E1DAE547D001D2468 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
+		C13E508C1DBB4489008B1D58 /* SensorDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SensorDetailViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +112,7 @@
 				C13627E61DAE51A9001D2468 /* Assets.xcassets */,
 				C13627E81DAE51A9001D2468 /* LaunchScreen.storyboard */,
 				C13627EB1DAE51A9001D2468 /* Info.plist */,
+				C13E508C1DBB4489008B1D58 /* SensorDetailViewController.swift */,
 			);
 			path = BLEDemo;
 			sourceTree = "<group>";
@@ -279,6 +282,7 @@
 			files = (
 				C13627E21DAE51A9001D2468 /* DetailViewController.swift in Sources */,
 				C13627E01DAE51A9001D2468 /* MasterViewController.swift in Sources */,
+				C13E508D1DBB4489008B1D58 /* SensorDetailViewController.swift in Sources */,
 				C13627DE1DAE51A9001D2468 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
