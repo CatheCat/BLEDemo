@@ -9,6 +9,8 @@
 import UIKit
 import CoreBluetooth
 
+let target_characteristic_uuid = "ffe1" // KentDingle
+
 class MasterViewController: UITableViewController, CBCentralManagerDelegate, CBPeripheralDelegate {
 
     var detailViewController: DetailViewController? = nil
@@ -19,6 +21,11 @@ class MasterViewController: UITableViewController, CBCentralManagerDelegate, CBP
     var detailInfo = ""
     var restServices = [CBService]()
     var centralManager: CBCentralManager? //?表示可選型別，可能回傳是空
+    
+    // For Talking support
+    var shouldTalking = false //是否只是掃描連線 or 跳到另一頁進行通訊
+    var talkingPeripheral: CBPeripheral?
+    var talkingCharacteristic: CBCharacteristic?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,6 +35,19 @@ class MasterViewController: UITableViewController, CBCentralManagerDelegate, CBP
             self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
         }
         centralManager = CBCentralManager(delegate:self, queue: nil)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if talkingPeripheral != nil {
+            centralManager?.cancelPeripheralConnection(talkingPeripheral!)
+            talkingPeripheral = nil
+            talkingCharacteristic = nil
+            
+            // Resume the scan
+            startToScan();
+            
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -50,10 +70,12 @@ class MasterViewController: UITableViewController, CBCentralManagerDelegate, CBP
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showDetail" {
-            if let indexPath = self.tableView.indexPathForSelectedRow {
-                let object = objects[indexPath.row] as! NSDate
+            if self .tableView.indexPathForSelectedRow != nil {
+                //let object = objects[indexPath.row] as! NSDate
                 let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
-                controller.detailItem = object
+                //controller.detailItem = object
+                controller.targetPeripheral = talkingPeripheral
+                controller.targetCharacteristic  = talkingCharacteristic
                 controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem
                 controller.navigationItem.leftItemsSupplementBackButton = true
             }
@@ -104,6 +126,16 @@ class MasterViewController: UITableViewController, CBCentralManagerDelegate, CBP
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //detect one of lists is selected, and indexPath represent row index
+        shouldTalking = true
+        startToConnect(indexPath: indexPath)
+    }
+    
+    override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        shouldTalking = false
+        startToConnect(indexPath: indexPath)
+    }
+    
+    func startToConnect(indexPath: IndexPath) {
         let allKeys = Array(allItems.keys)
         let targetKey = allKeys[indexPath.row]
         let targetItem = allItems[targetKey]
@@ -168,6 +200,15 @@ class MasterViewController: UITableViewController, CBCentralManagerDelegate, CBP
         for tmp in service.characteristics! {
             detailInfo += "* Characteristics: \(tmp.uuid.uuidString)"
         
+            // Check if shouldTalking is true and it is what are looking for.
+            if shouldTalking && tmp.uuid.uuidString.lowercased() == target_characteristic_uuid {
+                restServices.removeAll();
+                talkingPeripheral = peripheral
+                talkingCharacteristic = tmp
+                // Link to Segue named showDetail
+                self.performSegue(withIdentifier: "showDetail", sender: nil)
+                return
+            }
         }
         // End of all discovering yet, or not
         if restServices.isEmpty {

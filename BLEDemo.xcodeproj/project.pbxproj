@@ -532,6 +532,7 @@
 				C13628061DAE51AA001D2468 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C13628071DAE51AA001D2468 /* Build configuration list for PBXNativeTarget "BLEDemoTests" */ = {
 			isa = XCConfigurationList;
@@ -540,6 +541,7 @@
 				C13628091DAE51AA001D2468 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C136280A1DAE51AA001D2468 /* Build configuration list for PBXNativeTarget "BLEDemoUITests" */ = {
 			isa = XCConfigurationList;
@@ -548,6 +550,7 @@
 				C136280C1DAE51AA001D2468 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
