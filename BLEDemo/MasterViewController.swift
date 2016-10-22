@@ -18,7 +18,7 @@ class MasterViewController: UITableViewController, CBCentralManagerDelegate, CBP
     // For Service/Characteristic scan
     var detailInfo = ""
     var restServices = [CBService]()
-    var centalManager: CBCentralManager? //?表示可選型別，可能回傳是空
+    var centralManager: CBCentralManager? //?表示可選型別，可能回傳是空
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,7 +27,7 @@ class MasterViewController: UITableViewController, CBCentralManagerDelegate, CBP
             let controllers = split.viewControllers
             self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
         }
-        centalManager = CBCentralManager(delegate:self, queue: nil)
+        centralManager = CBCentralManager(delegate:self, queue: nil)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -59,6 +59,10 @@ class MasterViewController: UITableViewController, CBCentralManagerDelegate, CBP
             }
         }
     }
+    
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        return false;
+    }
 
     // MARK: - Table View
 
@@ -77,7 +81,7 @@ class MasterViewController: UITableViewController, CBCentralManagerDelegate, CBP
         let allKeys = Array(allItems.keys)
         let targetKey = allKeys[indexPath.row]
         let targetItem = allItems[targetKey]
-        let name = targetItem?.peripheral?.name ?? "Unknow"
+        let name = targetItem?.peripheral.name ?? "Unknow"
         cell.textLabel!.text = "\(name) RSSI: \(targetItem!.lastRSSI)"
         let lastScanSecondAgo = String(format: "%if", Date().timeIntervalSince(targetItem!.lastScanDateTime))
         cell.detailTextLabel!.text = "Last scan \(lastScanSecondAgo) seconds ago"
@@ -105,14 +109,14 @@ class MasterViewController: UITableViewController, CBCentralManagerDelegate, CBP
         let targetItem = allItems[targetKey]
         
         NSLog("Connection to \(targetKey) ...")
-        centalManager?.connect(targetItem!.peripheral, options: nil)
+        centralManager?.connect(targetItem!.peripheral, options: nil)
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         let name = peripheral.name ?? "Unknown"
         NSLog("Connected to \(name)")
         
-        stopScanning()
+        stopToScan()
         
         // Try to discovery the services of peripheral
         peripheral.delegate = self
@@ -131,11 +135,11 @@ class MasterViewController: UITableViewController, CBCentralManagerDelegate, CBP
         startToScan()
     }
     
-    // MarkL CBPeripheralDElegate Methods
+    // Mark: CBPeripheralDElegate Methods
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         // any error occurred then disconnect to peripheral
         if error != nil {
-            centalManager?.cancelPeripheralConnection(peripheral)
+            centralManager?.cancelPeripheralConnection(peripheral)
             NSLog("Error: \(error)")
             return
         }
@@ -150,24 +154,44 @@ class MasterViewController: UITableViewController, CBCentralManagerDelegate, CBP
         // Pick the first one
         let targetService = restServices.first
         restServices.remove(at: 0)
-        
-        peripheral.discoverCharacteristics(nil, for: targetService)
-        
+        peripheral.discoverCharacteristics(nil, for: targetService!)
     }
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+        if error != nil {
+            centralManager?.cancelPeripheralConnection(peripheral)
+            NSLog("Error:\(error!)")
+            return
+        }
         
+        detailInfo += "*** Peripheral: \(peripheral.name!) \(peripheral.services!.count) serices.\n"
+        detailInfo += "** Service: \(service.uuid.uuidString) \(service.characteristics!.count) characteristics.\n"
+        for tmp in service.characteristics! {
+            detailInfo += "* Characteristics: \(tmp.uuid.uuidString)"
+        
+        }
+        // End of all discovering yet, or not
+        if restServices.isEmpty {
+    
+            showAlert(msg: detailInfo)
+            centralManager?.cancelPeripheralConnection(peripheral)
+        } else {
+            // Pick the first one
+            let targetService = restServices.first
+            restServices.remove(at: 0)
+            peripheral.discoverCharacteristics(nil, for: targetService!)
+        }
     }
     
     func startToScan()
     {
         NSLog("start scanning")
         let options = [CBCentralManagerScanOptionAllowDuplicatesKey:true]
-        centalManager?.scanForPeripherals(withServices: nil, options: options)
+        centralManager?.scanForPeripherals(withServices: nil, options: options)
     }
     
     func stopToScan()
     {
-        centalManager?.stopScan()
+        centralManager?.stopScan()
     }
     
     func showAlert(msg: String) {
@@ -208,7 +232,7 @@ class MasterViewController: UITableViewController, CBCentralManagerDelegate, CBP
 
 // define data structure for storing bluetooth device information
 struct DiscoveredItem {
-    var peripheral:CBPeripheral?
+    var peripheral:CBPeripheral
     var lastRSSI:Int
     var lastScanDateTime:Date
     init(newPeripheral:CBPeripheral, RSSI:Int) {
